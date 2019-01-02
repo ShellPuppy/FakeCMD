@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeCMD", "FakeCMD\FakeCMD.csproj", "{DE09C421-B5D0-4ADA-A98D-565D468753DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE09C421-B5D0-4ADA-A98D-565D468753DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE09C421-B5D0-4ADA-A98D-565D468753DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE09C421-B5D0-4ADA-A98D-565D468753DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE09C421-B5D0-4ADA-A98D-565D468753DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {658E789D-CDDD-434D-BF94-B1D7C53E1ACA}
+	EndGlobalSection
+EndGlobal
