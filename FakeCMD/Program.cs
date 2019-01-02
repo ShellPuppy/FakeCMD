@@ -160,7 +160,7 @@ namespace FakeCMD
             }
 
             //Capture keys pressed while the process is running (don't display them in the console)
-
+            CapturedString = string.Empty;
             while (Console.KeyAvailable)
             {
                 CapturedString += Console.ReadKey(true).KeyChar;
@@ -170,7 +170,6 @@ namespace FakeCMD
 
             e.Cancel = true;
         }
-
 
         static void Main(string[] args)
         {
