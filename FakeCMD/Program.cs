@@ -9,16 +9,14 @@ namespace FakeCMD
 {
     class Program
     {
-
-        private const string CMDStartMessage = "Microsoft Windows [Version 7.0.16299.492]\n(c) 2016 Microsoft Corporation.All rights reserved.\n";
-
-        private static DirectoryInfo CurrentDirectory { get; set; } = new DirectoryInfo(@"C:\Windows\System32");
+        private static DirectoryInfo CurrentDirectory { get; set; }
 
         private static string NewCommandPrompt => CurrentDirectory.FullName + ">";
 
         private static Process RunningProcess { get; set; }
 
         private static string CapturedString { get; set; } //This will contain the string the user typed in while a process was running
+
         private static bool BreakCaptured { get; set; } //This is triggered when the user hits ctrl-c
 
         private static void CommandLoop()
@@ -60,6 +58,7 @@ namespace FakeCMD
                     continue;
                 }
 
+                //Change Directory (required)
                 if (lcommand.StartsWith("cd"))
                 {
                     //get new directory name
@@ -71,7 +70,6 @@ namespace FakeCMD
                     else
                     {
                         Console.WriteLine("The system cannot find the specified path.\n");
-
                     }
 
                     continue;
@@ -86,8 +84,8 @@ namespace FakeCMD
 
                 if (lcommand.StartsWith("syskey"))
                 {
-                   
-                   // Process.Start(@"https://en.wikipedia.org/wiki/Technical_support_scam");
+
+                    Process.Start(@"https://en.wikipedia.org/wiki/Technical_support_scam");
                     continue;
                 }
 
@@ -122,13 +120,13 @@ namespace FakeCMD
 
                     while (true)
                     {
-                        Console.Write((char)r.Next(0, 255));
+                        Console.Write((char)r.Next(12, 255));
 
                         if (r.Next(0, 200) == 123) Console.ForegroundColor = ConsoleColor.DarkGreen;
                         if (r.Next(0, 300) == 123) Console.ForegroundColor = ConsoleColor.Green;
                         if (r.Next(0, 500) == 123) Console.ForegroundColor = ConsoleColor.Red;
 
-                        System.Threading.Thread.Sleep(2);
+                        if (r.Next(0, 20) == 1) Console.Beep(r.Next(200, 2700), 100);
 
                         if (r.Next(0, 40) == 2)
                         {
@@ -181,7 +179,7 @@ namespace FakeCMD
         }
 
         /// <summary>
-        /// Captures the ctrl-break ctrl-c event.  Aborts a running a process. Prevents the user from exiting 
+        /// Captures the ctrl-break ctrl-c event.  Aborts a running a process. 
         /// </summary>
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
@@ -211,7 +209,10 @@ namespace FakeCMD
             Console.Title = "Command Prompt";
 
             //Command prompt startup message
-            Console.WriteLine(CMDStartMessage);
+            Console.WriteLine("Microsoft Windows [Version 7.0.16299.492]\n(c) 2016 Microsoft Corporation.All rights reserved.\n");
+
+            //Set current directory
+            CurrentDirectory = new DirectoryInfo(@"C:\Windows\System32"); 
 
             //Capture ctrl-c ctrl-break 
             Console.CancelKeyPress += Console_CancelKeyPress;
