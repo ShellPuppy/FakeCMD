@@ -60,16 +60,43 @@ namespace FakeCMD
                     continue;
                 }
 
+                if (lcommand.StartsWith("cd"))
+                {
+                    //get new directory name
+                    var newdir = Path.Combine(CurrentDirectory.FullName, Command.Replace("cd ", ""));
+                    if (Directory.Exists(newdir))
+                    {
+                        CurrentDirectory = new DirectoryInfo(newdir);
+                    }
+                    else
+                    {
+                        Console.WriteLine("The system cannot find the specified path.\n");
+
+                    }
+
+                    continue;
+                }
+
                 if (lcommand.StartsWith("tree"))
                 {
-                    //You can start any process here
                     StartProcess(@"c:\windows\system32\tree.com");
+                    Console.WriteLine(Properties.Resources.Tree);
                     continue;
                 }
 
                 if (lcommand.StartsWith("syskey"))
                 {
-                    Process.Start(@"https://en.wikipedia.org/wiki/Technical_support_scam");
+                   
+                   // Process.Start(@"https://en.wikipedia.org/wiki/Technical_support_scam");
+                    continue;
+                }
+
+                //ascii art examples
+                if (lcommand.StartsWith("art"))
+                {
+                    Console.WriteLine(Properties.Resources.Tree);
+                    Console.WriteLine(Properties.Resources.Brain);
+                    Console.WriteLine(Properties.Resources.Donkey);
                     continue;
                 }
 
@@ -87,7 +114,8 @@ namespace FakeCMD
                     continue;
                 }
 
-                if (Command.StartsWith("netstat"))
+
+                if (lcommand.StartsWith("netstat"))
                 {
                     //hacker mode
                     var r = new Random();
@@ -119,7 +147,7 @@ namespace FakeCMD
         /// Attempts to start the process the user typed in.
         /// </summary>
         /// <param name="Command"></param>
-        private static void StartProcess(string Command)
+        private static void StartProcess(string Command, string Arguments = "")
         {
             try
             {
@@ -128,6 +156,12 @@ namespace FakeCMD
                 so.UseShellExecute = false;
 
                 so.WorkingDirectory = CurrentDirectory.FullName;
+
+                if (Command.Contains(" "))
+                {
+                    so.FileName = Command.Substring(0, Command.IndexOf(' '));
+                    so.Arguments = Command.Substring(Command.IndexOf(' '));
+                }
 
                 RunningProcess = Process.Start(so);
 

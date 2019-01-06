@@ -22,7 +22,7 @@ namespace FakeCMD.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace FakeCMD.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FakeCMD.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace FakeCMD.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,12 +61,77 @@ namespace FakeCMD.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to                                                                       .uuu
+        ///    z@#&quot;%c                      .uuzm**&quot;&quot;&quot;&quot;&quot;*%mu..             z*&quot;` .e@#N
+        ///   @!!!R.  #c              .z*&quot;                    ^*c       z    dT!!!!!&gt;
+        ///  &apos;!!!!!!N   &quot;i         u*&quot;                            #s  :&quot;   @?!!!!!!!R
+        ///  t!!!!!!!#u   &quot;i    .@                                  ^$   :R!!!!!!!!!X
+        ///  &apos;!!!!!!!!!#c   &quot;i:#                                      ?&gt; R!!!!!!!!!!X
+        ///  &apos;!!!!!!!!!!!N   @                                       [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Brain {
+            get {
+                return ResourceManager.GetString("Brain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon cmd {
+        public static System.Drawing.Icon cmd {
             get {
                 object obj = ResourceManager.GetObject("cmd", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to     ,--._
+        ///    `.   `.                      ,-.
+        ///      `.`. `.                  ,&apos;   )
+        ///        \`:  \               ,&apos;    /
+        ///         \`:  ),.         ,-&apos; ,   /
+        ///         ( :  |:::.    ,-&apos; ,&apos;   ,&apos;
+        ///         `.;: |::::  ,&apos; ,:&apos;  ,-&apos;
+        ///         ,^-. `,--.-/ ,&apos;  _,&apos;
+        ///        (__        ^ ( _,&apos;
+        ///      __((o\   __   ,-&apos;
+        ///    ,&apos;,-.     ((o)  /
+        ///  ,&apos;,&apos;   `.    `-- (
+        ///  |&apos;      ,`        \
+        ///  |     ,:&apos; `        |
+        /// (  `--      :-.     |
+        /// `,.__       ,-,&apos;   ;
+        /// (_/  `,__,-&apos; /   ,&apos;
+        /// |\`--|_/,&apos; ,&apos; _,&apos;
+        /// \_^--^,&apos;,-&apos; - [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Donkey {
+            get {
+                return ResourceManager.GetString("Donkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to             @
+        ///      @ @ @  @ @ @
+        ///    @  @\/@ @ /__@
+        ///    @@@ @\ / @/  @ @
+        ///   @\  \/@| @ | @
+        ///  @__\@ \ |/ \| / @
+        ///     __\|@|  ||/__/@
+        ///    /  \ \\  / /__
+        ///   @    \  \/ /   @
+        ///         |&quot; &apos;|
+        ///         |&quot;  |
+        ///         |&quot;  |
+        ///        ~|&quot;  |~
+        ///    ~~~~       ~~~~
+        ///  ~~               ~~~.
+        /// </summary>
+        public static string Tree {
+            get {
+                return ResourceManager.GetString("Tree", resourceCulture);
             }
         }
     }
