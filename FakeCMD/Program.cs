@@ -9,21 +9,26 @@ namespace FakeCMD
 {
     class Program
     {
+        //Keeps track of the current directory
         private static DirectoryInfo CurrentDirectory { get; set; }
 
+        //String that is shown at the start of a new command i.e. C:\Windows>
         private static string NewCommandPrompt => CurrentDirectory.FullName + ">";
 
+        //Reference to the process started by the user 
         private static Process RunningProcess { get; set; }
 
-        private static string CapturedString { get; set; } //This will contain the string the user typed in while a process was running
-
-        private static bool BreakCaptured { get; set; } //This is triggered when the user hits ctrl-c
+        //If the user types while a process is running the text is captured into this string
+        private static string CapturedString { get; set; }
+        
+        //This is flagged when the user hits ctrl-c
+        private static bool BreakCaptured { get; set; } 
 
         private static void CommandLoop()
         {
             while (true)
             {
-                //Show prompt
+                //Show new command prompt
                 Console.Write(NewCommandPrompt);
 
                 //Uncomment this line if you want to see what the user typed in during a process (virus found!)
@@ -32,33 +37,39 @@ namespace FakeCMD
                 //Get command from the user
                 string Command = Console.ReadLine();
 
-                //If the user hits the ctlr-c then Command is null
+                //If the user hits ctlr-c then Command is null
                 if (Command == null)
                 {
                     Console.WriteLine();
                     continue;
                 }
 
-                //format the command string
+                //Cleanup the command string
                 string lcommand = Command.Replace(" ", "").ToLower();
 
-                //Do something with the command
 
-                //Change Directory (required)
+                //
+                //Do something with the command
+                //
+
+
+
+                //cd..
                 if (lcommand.StartsWith("cd.."))
                 {
-                    if (CurrentDirectory.Parent != null) CurrentDirectory = CurrentDirectory.Parent;
+                    //Perform the change directory command
+                    CurrentDirectory = CurrentDirectory?.Parent ?? CurrentDirectory;
                     continue;
                 }
 
-                //Change Directory (required)
+                //cd\
                 if (lcommand.StartsWith(@"cd\"))
                 {
                     CurrentDirectory = CurrentDirectory.Root;
                     continue;
                 }
 
-                //Change Directory (required)
+                //cd
                 if (lcommand.StartsWith("cd"))
                 {
                     //get new directory name
@@ -75,6 +86,7 @@ namespace FakeCMD
                     continue;
                 }
 
+                //tree
                 if (lcommand.StartsWith("tree"))
                 {
                     StartProcess(@"c:\windows\system32\tree.com");
@@ -82,6 +94,7 @@ namespace FakeCMD
                     continue;
                 }
 
+                //syskey
                 if (lcommand.StartsWith("syskey"))
                 {
 
@@ -98,6 +111,7 @@ namespace FakeCMD
                     continue;
                 }
 
+                //dir 
                 if (lcommand.StartsWith("dir"))
                 {
                     //Loop until user hits break
@@ -112,7 +126,7 @@ namespace FakeCMD
                     continue;
                 }
 
-
+                //netstat
                 if (lcommand.StartsWith("netstat"))
                 {
                     //hacker mode
@@ -136,7 +150,7 @@ namespace FakeCMD
 
                 }
 
-                //Run the command (if none of them match above)
+                //Try to run the command (if none of them match above)
                 StartProcess(Command);
             }
         }
@@ -155,6 +169,7 @@ namespace FakeCMD
 
                 so.WorkingDirectory = CurrentDirectory.FullName;
 
+                //Get the command and the arguments
                 if (Command.Contains(" "))
                 {
                     so.FileName = Command.Substring(0, Command.IndexOf(' '));
@@ -179,7 +194,8 @@ namespace FakeCMD
         }
 
         /// <summary>
-        /// Captures the ctrl-break ctrl-c event.  Aborts a running a process. 
+        /// Captures the ctrl-break ctrl-c event.  
+        /// Aborts a running a process. 
         /// </summary>
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
@@ -205,14 +221,15 @@ namespace FakeCMD
 
         static void Main(string[] args)
         {
+
             //Set title to match a real command prompt
-            Console.Title = "Command Prompt";
+            Console.Title = @"C:\Windows\System32\cmd.exe";
 
             //Command prompt startup message
-            Console.WriteLine("Microsoft Windows [Version 7.0.16299.492]\n(c) 2016 Microsoft Corporation.All rights reserved.\n");
+            Console.WriteLine("Microsoft Windows [Version 10.0.1337.420]\n(c) 2018 Microsoft Corporation.All rights reserved.\n");
 
             //Set current directory
-            CurrentDirectory = new DirectoryInfo(@"C:\Windows\System32"); 
+            CurrentDirectory = new DirectoryInfo(@"C:\Windows\System32");
 
             //Capture ctrl-c ctrl-break 
             Console.CancelKeyPress += Console_CancelKeyPress;
