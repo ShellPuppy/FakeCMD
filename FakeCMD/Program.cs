@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace FakeCMD
 {
@@ -20,9 +21,9 @@ namespace FakeCMD
 
         //If the user types while a process is running the text is captured into this string
         private static string CapturedString { get; set; }
-        
+
         //This is flagged when the user hits ctrl-c
-        private static bool BreakCaptured { get; set; } 
+        private static bool BreakCaptured { get; set; }
 
         private static void CommandLoop()
         {
@@ -34,8 +35,10 @@ namespace FakeCMD
                 //Uncomment this line if you want to see what the user typed in during a process (virus found!)
                 //if (!string.IsNullOrEmpty(CapturedString)) Console.Write(CapturedString);
 
+
+
                 //Get command from the user
-                string Command = Console.ReadLine();
+                string Command = CaptureKeyStrokes(); //Console.ReadLine();
 
                 //If the user hits ctlr-c then Command is null
                 if (Command == null)
@@ -53,6 +56,12 @@ namespace FakeCMD
                 //
 
 
+                //if the user gave an empty string or hit ctrl-c while typing, then just send a new line and start the loop over
+                if (string.IsNullOrEmpty(lcommand))
+                {
+                    Console.Write("\n");
+                    continue;
+                }
 
                 //cd..
                 if (lcommand.StartsWith("cd.."))
@@ -194,11 +203,141 @@ namespace FakeCMD
         }
 
         /// <summary>
+        /// Capture 
+        /// </summary>
+        private static string CaptureKeyStrokes()
+        {
+
+
+            ConsoleKeyInfo keypress;
+
+            string result = string.Empty;
+            string newresult = string.Empty;
+            bool handled = false;
+
+            //Remember where the start of the string is
+            int MinCursorPositionLeft = Console.CursorLeft;
+            int MinCursMinCursorTop = Console.CursorTop;
+
+            //Keep track of where the cursor is in relation to the string are in the string
+            int stringpos = 0;
+
+            try
+            {
+                Console.TreatControlCAsInput = true;    //We need to capture ctrl-c
+
+                while (true)
+                {
+                    handled = false;
+
+                    keypress = Console.ReadKey(true); // read next key stroke 
+
+                    //user pressed enter - return the entire string
+                    if (keypress.Key == ConsoleKey.Enter) return result;
+
+                    //Capture ctrl-c
+                    if (keypress.KeyChar == 3)
+                    {
+                        return string.Empty;
+                    }
+
+                    if (keypress.Key == ConsoleKey.Escape)
+                    {
+                        newresult = string.Empty;
+                        stringpos = 0;
+                        handled = true;
+                    }
+
+                    //Left arrow
+                    if (keypress.Key == ConsoleKey.LeftArrow)
+                    {
+                        Console.SetCursorPosition(Math.Max(MinCursorPositionLeft, Console.CursorLeft - 1), MinCursMinCursorTop);
+                        stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                        handled = true;
+                        continue;
+                    }
+
+                    //Right arrow
+                    if (keypress.Key == ConsoleKey.RightArrow)
+                    {
+                        Console.SetCursorPosition(Math.Min(MinCursorPositionLeft + result.Length, Console.CursorLeft + 1), MinCursMinCursorTop);
+                        stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                        handled = true;
+                        continue;
+                    }
+
+                    //Back space
+                    if (keypress.Key == ConsoleKey.Backspace)
+                    {
+                        if (Console.CursorLeft - 1 >= MinCursorPositionLeft)
+                        {
+                            Console.SetCursorPosition(Math.Max(MinCursorPositionLeft, Console.CursorLeft - 1), MinCursMinCursorTop);
+                            stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                            newresult = result.Remove(stringpos, 1);
+                            handled = true;
+                        }
+                    }
+
+                    //Back space
+                    if (keypress.Key == ConsoleKey.Delete)
+                    {
+                        stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                        if (stringpos < result.Length)
+                        {
+                            newresult = result.Remove(stringpos, 1);
+                        }
+                        handled = true;
+                    }
+
+                    if (!handled)
+                    {
+                        stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                        newresult = result.Insert(stringpos, keypress.KeyChar.ToString());
+                        stringpos += 1;
+                    }
+
+                    //We can reject any numbers greater than 999
+
+                    if (ExtractValue(newresult) > 999) continue;
+
+
+                    //Rewrite the entire result string
+                    Console.SetCursorPosition(MinCursorPositionLeft, MinCursMinCursorTop);
+                    Console.Write(new string(' ', result.Length));
+                    Console.SetCursorPosition(MinCursorPositionLeft, MinCursMinCursorTop);
+                    result = newresult;
+                    Console.Write(newresult);
+                    Console.SetCursorPosition(MinCursorPositionLeft + stringpos, MinCursMinCursorTop);
+                }
+            }
+            finally
+            {
+                Console.TreatControlCAsInput = false; ////We need to let the event handler capture ctrl-c
+            }
+        }
+
+        private static double ExtractValue(string st)
+        {
+            var result = 0.0;
+            var mt = Regex.Matches(st,@"(?:\d+(?:\.\d*)?|\.\d+)");
+            foreach(Match m in mt)
+            {
+                if(double.TryParse(m.Value, out double v))
+                {
+                    if (v > result) result = v;
+                }
+            }
+            return result;
+        }
+
+
+        /// <summary>
         /// Captures the ctrl-break ctrl-c event.  
         /// Aborts a running a process. 
         /// </summary>
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
+
 
             //If a process is running then kill it
             if (RunningProcess != null && !RunningProcess.HasExited)
@@ -221,6 +360,9 @@ namespace FakeCMD
 
         static void Main(string[] args)
         {
+
+
+
 
             //Set title to match a real command prompt
             Console.Title = @"C:\Windows\System32\cmd.exe";
