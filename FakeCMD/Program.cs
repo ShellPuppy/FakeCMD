@@ -233,7 +233,11 @@ namespace FakeCMD
                     keypress = Console.ReadKey(true); // read next key stroke 
 
                     //user pressed enter - return the entire string
-                    if (keypress.Key == ConsoleKey.Enter) return result;
+                    if (keypress.Key == ConsoleKey.Enter)
+                    {
+                        Console.WriteLine();
+                        return result;
+                    }
 
                     //Capture ctrl-c
                     if (keypress.KeyChar == 3)
@@ -298,7 +302,7 @@ namespace FakeCMD
 
                     //We can reject any numbers greater than 999
 
-                    if (ExtractValue(newresult) > 999) continue;
+                    if (ExtractValue(newresult) > 999.99) continue;
 
 
                     //Rewrite the entire result string
