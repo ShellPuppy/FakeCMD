@@ -95,6 +95,14 @@ namespace FakeCMD
                     continue;
                 }
 
+                //cls
+                if (lcommand == "cls")
+                {
+                    Console.Clear();
+                    Console.WriteLine();
+                    continue;
+                }
+
                 //tree
                 if (lcommand.StartsWith("tree"))
                 {
@@ -202,6 +210,8 @@ namespace FakeCMD
 
         }
 
+
+
         /// <summary>
         /// Capture 
         /// </summary>
@@ -219,7 +229,7 @@ namespace FakeCMD
             int MinCursorPositionLeft = Console.CursorLeft;
             int MinCursMinCursorTop = Console.CursorTop;
 
-            //Keep track of where the cursor is in relation to the string are in the string
+            //Keep track of where the cursor is in relation to the string 
             int stringpos = 0;
 
             try
@@ -282,7 +292,7 @@ namespace FakeCMD
                         }
                     }
 
-                    //Back space
+                    //Delete key
                     if (keypress.Key == ConsoleKey.Delete)
                     {
                         stringpos = Console.CursorLeft - MinCursorPositionLeft;
@@ -305,6 +315,8 @@ namespace FakeCMD
                     if (ExtractValue(newresult) > 999.99) continue;
 
 
+
+
                     //Rewrite the entire result string
                     Console.SetCursorPosition(MinCursorPositionLeft, MinCursMinCursorTop);
                     Console.Write(new string(' ', result.Length));
@@ -322,8 +334,11 @@ namespace FakeCMD
 
         private static double ExtractValue(string st)
         {
-            var result = 0.0;
-            var mt = Regex.Matches(st,@"(?:\d+(?:\.\d*)?|\.\d+)");
+            double result = 0.0;
+
+            if (string.IsNullOrEmpty(st)) return result;
+
+            var mt = Regex.Matches(st.Replace(",",""),@"(?:\d+(?:\.\d*)?|\.\d+)");
             foreach(Match m in mt)
             {
                 if(double.TryParse(m.Value, out double v))
