@@ -35,15 +35,13 @@ namespace FakeCMD
                 //Uncomment this line if you want to see what the user typed in during a process (virus found!)
                 //if (!string.IsNullOrEmpty(CapturedString)) Console.Write(CapturedString);
 
-
-
                 //Get command from the user
                 string Command = CaptureKeyStrokes(); //Console.ReadLine();
 
-                //If the user hits ctlr-c then Command is null
-                if (Command == null)
+                //if the user gave an empty string or hit ctrl-c while typing, then just send a new line and start the loop over
+                if (string.IsNullOrEmpty(Command))
                 {
-                    Console.WriteLine();
+                    Console.Write("\n\n");
                     continue;
                 }
 
@@ -55,13 +53,6 @@ namespace FakeCMD
                 //Do something with the command
                 //
 
-
-                //if the user gave an empty string or hit ctrl-c while typing, then just send a new line and start the loop over
-                if (string.IsNullOrEmpty(lcommand))
-                {
-                    Console.Write("\n");
-                    continue;
-                }
 
                 //cd..
                 if (lcommand.StartsWith("cd.."))
@@ -169,6 +160,8 @@ namespace FakeCMD
 
                 //Try to run the command (if none of them match above)
                 StartProcess(Command);
+
+                Console.WriteLine(); 
             }
         }
 
@@ -255,6 +248,16 @@ namespace FakeCMD
                         return string.Empty;
                     }
 
+                    //ctrl-v
+                    if (keypress.KeyChar == 22)
+                    {
+                        stringpos = Console.CursorLeft - MinCursorPositionLeft;
+                        string paste = " never share wifi password";
+                        newresult = result.Insert(stringpos, paste);
+                        stringpos += paste.Length;
+                        handled = true;
+                    }
+
                     if (keypress.Key == ConsoleKey.Escape)
                     {
                         newresult = string.Empty;
@@ -288,8 +291,8 @@ namespace FakeCMD
                             Console.SetCursorPosition(Math.Max(MinCursorPositionLeft, Console.CursorLeft - 1), MinCursMinCursorTop);
                             stringpos = Console.CursorLeft - MinCursorPositionLeft;
                             newresult = result.Remove(stringpos, 1);
-                            handled = true;
                         }
+                        handled = true;
                     }
 
                     //Delete key
@@ -310,12 +313,13 @@ namespace FakeCMD
                         stringpos += 1;
                     }
 
-                    //We can reject any numbers greater than 999
+                    //We can reject any numbers greater than 999 
 
                     if (ExtractValue(newresult) > 999.99) continue;
 
-
-
+                    //Silly things
+                    //newresult = newresult.Replace("o", "ö");
+                    //newresult = newresult.Replace("$", "£");
 
                     //Rewrite the entire result string
                     Console.SetCursorPosition(MinCursorPositionLeft, MinCursMinCursorTop);
@@ -325,13 +329,29 @@ namespace FakeCMD
                     Console.Write(newresult);
                     Console.SetCursorPosition(MinCursorPositionLeft + stringpos, MinCursMinCursorTop);
                 }
+
             }
+            catch { }
             finally
             {
                 Console.TreatControlCAsInput = false; ////We need to let the event handler capture ctrl-c
             }
+
+            return string.Empty;
         }
 
+        public static string ReverseString(string str)
+        {
+            char[] array = str.ToCharArray();
+            Array.Reverse(array);
+            return new string(array);
+        }
+
+        /// <summary>
+        /// Extracts the largest number found in the string
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns></returns>
         private static double ExtractValue(string st)
         {
             double result = 0.0;
@@ -356,7 +376,7 @@ namespace FakeCMD
         /// </summary>
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-
+            
 
             //If a process is running then kill it
             if (RunningProcess != null && !RunningProcess.HasExited)
@@ -379,9 +399,6 @@ namespace FakeCMD
 
         static void Main(string[] args)
         {
-
-
-
 
             //Set title to match a real command prompt
             Console.Title = @"C:\Windows\System32\cmd.exe";
